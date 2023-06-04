@@ -2,12 +2,16 @@ import random
 
 
 def generar_tablero(n):
+    # Genera un tablero de tamaño n x n con valores aleatorios del 1 al 9
+    # La casilla en la posición (0, 0) siempre tiene un valor de 0
     tablero = [[random.randint(1, 9) for _ in range(n)] for _ in range(n)]
-    tablero[0][0] = 0  # Casilla en la posición (0, 0) siempre tiene un valor de 0
+    tablero[0][0] = 0
     return tablero
 
 
 def imprimir_tablero(tablero, visitados, valor_acumulado):
+    # Imprime el tablero con las casillas visitadas marcadas con una X
+    # y muestra el valor acumulado del camino actual
     n = len(tablero)
     for i in range(n):
         for j in range(n):
@@ -22,13 +26,16 @@ def imprimir_tablero(tablero, visitados, valor_acumulado):
 
 
 def dentro_del_tablero(x, y, n):
+    # Verifica si las coordenadas (x, y) están dentro del tablero de tamaño n x n
     return 0 <= x < n and 0 <= y < n
 
 
 def dfs(tablero, objetivo, x, y, visitados, valor_acumulado):
+    # Realiza una búsqueda en profundidad (DFS) para encontrar un camino que sume el objetivo
     n = len(tablero)
 
     if tablero[x][y] + valor_acumulado == objetivo:
+        # Si se alcanza el objetivo, se ha encontrado un camino válido
         return True
 
     visitados[x][y] = True
@@ -43,9 +50,7 @@ def dfs(tablero, objetivo, x, y, visitados, valor_acumulado):
             and tablero[nx][ny] + valor_acumulado <= objetivo
         ):
             visitados[nx][ny] = True
-            if dfs(
-                tablero, objetivo, nx, ny, visitados, valor_acumulado + tablero[nx][ny]
-            ):
+            if dfs(tablero, objetivo, nx, ny, visitados, valor_acumulado + tablero[nx][ny]):
                 return True
             visitados[nx][ny] = False
 
@@ -53,14 +58,15 @@ def dfs(tablero, objetivo, x, y, visitados, valor_acumulado):
 
 
 def jugar_numero_magico(n, objetivo):
-    # Setup
+    # Configuración inicial del juego
     tablero = generar_tablero(n)
     visitados = [[False for _ in range(n)] for _ in range(n)]
     visitados[0][0] = True  # La casilla (0, 0) siempre comienza visitada
     x, y = 0, 0
     valor_acumulado = 0
     camino = [(x, y)]
-    # mientras dfs no retorne true, se crea un nuevo tablero
+
+    # Si no hay un camino válido con el tablero generado, se vuelve a generar un nuevo tablero
     while not dfs(tablero, objetivo, x, y, visitados, valor_acumulado):
         tablero = generar_tablero(n)
         visitados = [[False for _ in range(n)] for _ in range(n)]
@@ -115,9 +121,7 @@ def jugar_numero_magico(n, objetivo):
                 x, y = nx, ny
                 valor_acumulado += tablero[x][y]
                 camino.append((x, y))
-                visitados = [
-                    [False for _ in range(n)] for _ in range(n)
-                ]  # Reiniciar listado de visitados
+                visitados = [[False for _ in range(n)] for _ in range(n)]  # Reiniciar listado de visitados
                 for cx, cy in camino:
                     visitados[cx][cy] = True
             else:
@@ -132,8 +136,8 @@ def jugar_numero_magico(n, objetivo):
 # extreme: jugar_numero_magico(10, 50)
 
 
-# preguntar al usuario el nivel de dificultad
 def dificultad():
+    # Pregunta al usuario el nivel de dificultad y ejecuta el juego correspondiente
     while True:
         print("¿Qué nivel de dificultad deseas?")
         print("1. Fácil")
