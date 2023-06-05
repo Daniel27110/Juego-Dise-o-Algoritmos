@@ -10,13 +10,13 @@ def generar_tablero(n):
 
 
 def imprimir_tablero(tablero, visitados, valor_acumulado):
-    # Imprime el tablero con las casillas visitadas marcadas con una X
+    # Imprime el tablero con las casillas visitadas marcadas con una
     # y muestra el valor acumulado del camino actual
     n = len(tablero)
     for i in range(n):
         for j in range(n):
             if visitados[i][j]:
-                print(" X ", end="")
+                print(" ■ ", end="")
             else:
                 print(f" {tablero[i][j]} ", end="")
             print("|", end="")
@@ -30,17 +30,26 @@ def dentro_del_tablero(x, y, n):
     return 0 <= x < n and 0 <= y < n
 
 
+def reiniciarTablero(visitados, x, y, valor_acumulado, camino, n):
+    visitados = [[False for _ in range(n)] for _ in range(n)]
+    visitados[0][0] = True
+    x, y = 0, 0
+    valor_acumulado = 0
+    camino = [(x, y)]
+    return visitados, x, y, valor_acumulado, camino
+
+
 def dfs(tablero, objetivo, x, y, visitados, valor_acumulado):
     # Realiza una búsqueda en profundidad (DFS) para encontrar un camino que sume el objetivo
     n = len(tablero)
 
-    if tablero[x][y] + valor_acumulado == objetivo:
+    if valor_acumulado == objetivo:
         # Si se alcanza el objetivo, se ha encontrado un camino válido
         return True
 
-    visitados[x][y] = True
-
     movimientos = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+    random.shuffle(movimientos)
 
     for dx, dy in movimientos:
         nx, ny = x + dx, y + dy
@@ -69,24 +78,16 @@ def jugar_numero_magico(n, objetivo):
     # Si no hay un camino válido con el tablero generado, se vuelve a generar un nuevo tablero
     while not dfs(tablero, objetivo, x, y, visitados, valor_acumulado):
         tablero = generar_tablero(n)
-        visitados = [[False for _ in range(n)] for _ in range(n)]
-        visitados[0][0] = True
-        x, y = 0, 0
-        valor_acumulado = 0
-        camino = [(x, y)]
+        visitados, x, y, valor_acumulado, camino = reiniciarTablero(visitados, x, y, valor_acumulado, camino, n)
 
     # Juego
-    visitados = [[False for _ in range(n)] for _ in range(n)]
-    visitados[0][0] = True
-    x, y = 0, 0
-    valor_acumulado = 0
-    camino = [(x, y)]
+    visitados, x, y, valor_acumulado, camino = reiniciarTablero(visitados, x, y, valor_acumulado, camino, n)
 
     print("\n¡Bienvenido al juego 'Número Mágico'!")
     print("El objetivo es encontrar un camino que sume", objetivo, "puntos")
     print("Utiliza las teclas 'W', 'A', 'S', 'D' para moverte por el tablero.")
     print("Cada movimiento suma el valor de la casilla a tu valor acumulado.")
-    print("Usted comienza en la casilla (0, 0) con un valor acumulado de 0.")
+    print("Usted comienza en la esquina superior con un valor acumulado de 0.")
     print("Presiona 'Q' para salir del juego.")
     print("Presiona 'E' para resolver el juego automáticamente utilizando DFS.")
 
