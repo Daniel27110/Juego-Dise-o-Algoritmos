@@ -88,6 +88,7 @@ def jugar_numero_magico(n, objetivo):
     print("Cada movimiento suma el valor de la casilla a tu valor acumulado.")
     print("Usted comienza en la casilla (0, 0) con un valor acumulado de 0.")
     print("Presiona 'Q' para salir del juego.")
+    print("Presiona 'E' para resolver el juego automáticamente utilizando DFS.")
 
     while True:
         imprimir_tablero(tablero, visitados, valor_acumulado)
@@ -109,6 +110,16 @@ def jugar_numero_magico(n, objetivo):
             nx, ny = x + 1, y
         elif movimiento == "D":
             nx, ny = x, y + 1
+        elif movimiento == "E":
+            print("Resolviendo el juego automáticamente...")
+            visitados = [[False for _ in range(n)] for _ in range(n)]
+            visitados[0][0] = True
+            x, y = 0, 0
+            valor_acumulado = 0
+            camino = [(x, y)]
+            dfs(tablero, objetivo, x, y, visitados, valor_acumulado)
+            imprimir_tablero(tablero, visitados, objetivo)
+            break
         elif movimiento == "Q":
             print("Has salido del juego.")
             break
@@ -149,11 +160,11 @@ def dificultad():
         if opcion == "1":
             jugar_numero_magico(4, 20)
         elif opcion == "2":
-            jugar_numero_magico(6, 30)
+            jugar_numero_magico(6, 60)
         elif opcion == "3":
-            jugar_numero_magico(8, 40)
+            jugar_numero_magico(8, 120)
         elif opcion == "4":
-            jugar_numero_magico(10, 50)
+            jugar_numero_magico(10, 180)
         elif opcion == "5":
             print("Has salido del juego.")
             break
